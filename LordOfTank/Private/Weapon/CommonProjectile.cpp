@@ -46,7 +46,7 @@ ACommonProjectile::ACommonProjectile()
 	ProjectileMovement->bRotationFollowsVelocity = true;	//속도에 따라서 탄환을 회전시키고 싶을 때 사용한다.
 	ProjectileMovement->bShouldBounce = true;
 	ProjectileMovement->ProjectileGravityScale = 1.f;
-
+	
 	// Die after 3 seconds by default
 	//InitialLifeSpan = 3.0f;
 

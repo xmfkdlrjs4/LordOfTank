@@ -5,6 +5,7 @@
 #include "Vehicle/RearWheel.h"
 #include "Weapon/Projectile.h"
 #include "Weapon/CommonProjectile.h"
+#include "Weapon/ArmorPiercingProjectile.h"
 #include "Effects/TankCameraShake.h"
 #include "WheeledVehicleMovementComponent4W.h"
 #include "LOTPlayer.h"
@@ -110,6 +111,9 @@ ALOTPlayer::ALOTPlayer()
 
 	bIsFireMode = false;
 
+	MaxHealth = 500;
+	CurrentHealth = MaxHealth;
+
 	
 }
 
@@ -130,10 +134,22 @@ void ALOTPlayer::SetupPlayerInputComponent(UInputComponent* InputComponent)
 	InputComponent->BindAxis("Right", this, &ALOTPlayer::MoveRight);
 	InputComponent->BindAction("Fire", IE_Pressed, this, &ALOTPlayer::Fire);
 	InputComponent->BindAction("FireMode", IE_Pressed, this, &ALOTPlayer::FireMode);
+	InputComponent->BindAction("One", IE_Pressed, this, &ALOTPlayer::One);
+	InputComponent->BindAction("Two", IE_Pressed, this, &ALOTPlayer::Two);
 
 
 
 
+}
+void ALOTPlayer::One()
+{
+	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, TEXT("One!!!"));
+	CurrentProjectile = ProjectileInventory[0];
+}
+void ALOTPlayer::Two()
+{
+	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, TEXT("Two!!!"));
+	CurrentProjectile =ProjectileInventory[1];
 }
 
 void ALOTPlayer::Tick(float DeltaTime)
@@ -197,7 +213,7 @@ void ALOTPlayer::Fire()
 
 		}
 	}
-
+	GEngine->AddOnScreenDebugMessage(1, 2.0f, FColor::Blue, FString::Printf(TEXT("배열길이 %d"), ProjectileInventory.Num()));
 
 }
 
@@ -232,6 +248,7 @@ void ALOTPlayer::SetDefaultInvetory()
 	if (ProjectileInventory.Num() == 0)
 	{
 		ProjectileInventory.AddUnique(ACommonProjectile::StaticClass());
+		ProjectileInventory.AddUnique(AArmorPiercingProjectile::StaticClass());
 		CurrentProjectile = ProjectileInventory[0];
 
 	}

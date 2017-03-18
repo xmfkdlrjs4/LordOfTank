@@ -104,6 +104,9 @@ public:
 
 	void SetDefaultInvetory();
 
+	void One();
+	void Two();
+
 	
 
 private:
@@ -118,6 +121,11 @@ private:
 
 	/** is weapon currently equipped? */
 	uint32 bIsFireMode : 1;
+
+	float MaxHealth;
+
+	float CurrentHealth;
+
 
 
 

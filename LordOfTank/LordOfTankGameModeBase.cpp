@@ -6,3 +6,14 @@
 
 
 
+ALordOfTankGameModeBase::ALordOfTankGameModeBase()
+{
+	;
+}
+
+void ALordOfTankGameModeBase::StartPlay()
+{
+	Super::StartPlay();
+
+	
+}
