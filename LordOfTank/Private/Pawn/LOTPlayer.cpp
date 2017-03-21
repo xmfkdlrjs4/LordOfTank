@@ -153,10 +153,15 @@ void ALOTPlayer::One()
 	
 	//UGameplayStatics::GetPlayerController(GetWorld(), 0)->Possess();
 	TArray<TEnumAsByte<EObjectTypeQuery>> TraceObjects;
-	TraceObjects.Add(UEngineTypes::ConvertToObjectType(ECC_PhysicsBody));
+	TraceObjects.Add(UEngineTypes::ConvertToObjectType(ECC_Vehicle));
+
+
+
 	UWorld* const World = GetWorld();
-	FVector StartTrace = FireModeCamera->K2_GetComponentLocation();
-	FVector EndTrace = FireModeCamera->K2_GetComponentLocation() + FireModeCamera->GetForwardVector() * 5000; 
+	FVector StartTrace = MuzzleLocation->K2_GetComponentLocation();
+	FVector EndTrace = MuzzleLocation->K2_GetComponentLocation() + MuzzleLocation->GetForwardVector() * 5000;
+	//FVector StartTrace = FireModeCamera->K2_GetComponentLocation();
+	//FVector EndTrace = FireModeCamera->K2_GetComponentLocation() + FireModeCamera->GetForwardVector() * 5000; 
 	FHitResult OutHit;
 	//if(UKismetSystemLibrary::LineTraceSingleForObjects(GetWorld(), StartTrace, EndTrace,TraceObjects, false, TArray<AActor*>(), EDrawDebugTrace::ForDuration, OutHit, true))
 	if(UKismetSystemLibrary::LineTraceSingleForObjects(GetWorld(), StartTrace, EndTrace,TraceObjects, false, TArray<AActor*>(), EDrawDebugTrace::ForDuration, OutHit, true))
@@ -191,6 +196,7 @@ void ALOTPlayer::FireMode()
 		//1번째 인자false->hide,2번째 인자 false->자식 컴포넌트도 영향을 미친다.
 		TurretMesh->SetVisibility(false, false);
 		GetMesh()->SetVisibility(false, false);
+		BarrelMesh->SetVisibility(false, false);
 	}
 	else
 	{
@@ -201,6 +207,8 @@ void ALOTPlayer::FireMode()
 		//1번째 인자false->hide,2번째 인자 false->자식 컴포넌트도 영향을 미친다.
 		TurretMesh->SetVisibility(true, false);
 		GetMesh()->SetVisibility(true, false);
+		BarrelMesh->SetVisibility(true, false);
+	
 	}
 }
 

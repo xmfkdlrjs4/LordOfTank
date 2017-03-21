@@ -58,8 +58,10 @@ void AHomingProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, 
 	// Only add impulse and destroy projectile if we hit a physics
 	if ((OtherActor != NULL) && (OtherActor != this) && (OtherComp != NULL))
 	{
+
 		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Black, "Damage Player!");
 		OtherComp->AddImpulseAtLocation(GetVelocity() * 100.0f, GetActorLocation());
 		Destroy();
+
 	}
 }
