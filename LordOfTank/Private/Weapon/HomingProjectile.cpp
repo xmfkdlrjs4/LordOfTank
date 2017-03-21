@@ -21,9 +21,9 @@ AHomingProjectile::AHomingProjectile()
 	CollisionComp->SetCollisionResponseToAllChannels(ECR_Ignore);
 	CollisionComp->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Block);
 	CollisionComp->SetCollisionResponseToChannel(ECC_Vehicle, ECR_Block);
-	CollisionComp->OnComponentHit.AddDynamic(this, &AHomingProjectile::OnHit);		// set up a notification for when this component hits something blocking
+	CollisionComp->OnComponentHit.AddDynamic(this, &AHomingProjectile::OnHit);		
 
-																							// Set as root component
+																							
 	RootComponent = CollisionComp;
 
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> AmmoStaticMesh(TEXT("StaticMesh'/Game/LOTAssets/TankAssets/Meshes/ArmorPiercingAmmo.ArmorPiercingAmmo'"));
@@ -37,17 +37,15 @@ AHomingProjectile::AHomingProjectile()
 
 
 
-	//프로젝트타일무브먼트컴포넌트는 물리적인 오브젝트 위치를 나타내는 씬 컴포넌트가 아니기 때문에 붙이거나 하지 않는다.
-	// Use a ProjectileMovementComponent to govern this projectile's movement
 	ProjectileMovement->UpdatedComponent = CollisionComp;
 	ProjectileMovement->InitialSpeed = 8000.f;
 	ProjectileMovement->MaxSpeed = 8000.f;
 	ProjectileMovement->bRotationFollowsVelocity = true;	//속도에 따라서 탄환을 회전시키고 싶을 때 사용한다.
 	ProjectileMovement->bShouldBounce = true;
 	ProjectileMovement->ProjectileGravityScale = 1.f;
-
-	// Die after 3 seconds by default
-	//InitialLifeSpan = 3.0f;
+	ProjectileMovement->bIsHomingProjectile = true;
+	ProjectileMovement->HomingAccelerationMagnitude = 25000.f;
+	
 
 }
 
@@ -64,4 +62,13 @@ void AHomingProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, 
 		Destroy();
 
 	}
+}
+
+void AHomingProjectile::SetHomingTarget(AActor* HomingTarget)
+{
+	
+	USceneComponent* const CastTarget = Cast<USceneComponent>(HomingTarget);
+	if(CastTarget)
+		ProjectileMovement->HomingTargetComponent = CastTarget;
+
 }

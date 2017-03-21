@@ -20,6 +20,7 @@ public:
 	UFUNCTION()
 		virtual void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit) override;
 
+	virtual void SetHomingTarget(AActor* HomingTarget) override;
 	
 	
 };
