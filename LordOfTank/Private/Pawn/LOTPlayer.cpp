@@ -8,6 +8,7 @@
 #include "Weapon/ArmorPiercingProjectile.h"
 #include "Effects/TankCameraShake.h"
 #include "WheeledVehicleMovementComponent4W.h"
+#include "LOTDrone.h"
 #include "LOTPlayer.h"
 
 
@@ -106,13 +107,17 @@ ALOTPlayer::ALOTPlayer()
 	FireModeCamera->AttachToComponent(GetMesh(), FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("Body_TR"));
 	FireModeCamera->Deactivate();
 
-	//CurrentProjectile = AProjectile::StaticClass();
-	
+
 
 	bIsFireMode = false;
 
 	MaxHealth = 500;
 	CurrentHealth = MaxHealth;
+
+	//MyDrone = CreateDefaultSubobject<ALOTDrone>(TEXT("MyWebConnection"));
+	
+
+
 
 	
 }
@@ -122,6 +127,8 @@ void ALOTPlayer::BeginPlay()
 	Super::BeginPlay();
 	SetDefaultInvetory();
 	OnResetVR();
+
+
 }
 
 
@@ -138,13 +145,23 @@ void ALOTPlayer::SetupPlayerInputComponent(UInputComponent* InputComponent)
 	InputComponent->BindAction("Two", IE_Pressed, this, &ALOTPlayer::Two);
 
 
-
-
 }
 void ALOTPlayer::One()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, TEXT("One!!!"));
-	CurrentProjectile = ProjectileInventory[0];
+	//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, TEXT("One!!!"));
+	//CurrentProjectile = ProjectileInventory[0];
+	
+	//UGameplayStatics::GetPlayerController(GetWorld(), 0)->Possess();
+	TArray<TEnumAsByte<EObjectTypeQuery>> TraceObjects;
+	TraceObjects.Add(UEngineTypes::ConvertToObjectType(ECC_PhysicsBody));
+	UWorld* const World = GetWorld();
+	FVector StartTrace = FireModeCamera->K2_GetComponentLocation();
+	FVector EndTrace = FireModeCamera->K2_GetComponentLocation() + FireModeCamera->GetForwardVector() * 5000; 
+	FHitResult OutHit;
+	//if(UKismetSystemLibrary::LineTraceSingleForObjects(GetWorld(), StartTrace, EndTrace,TraceObjects, false, TArray<AActor*>(), EDrawDebugTrace::ForDuration, OutHit, true))
+	if(UKismetSystemLibrary::LineTraceSingleForObjects(GetWorld(), StartTrace, EndTrace,TraceObjects, false, TArray<AActor*>(), EDrawDebugTrace::ForDuration, OutHit, true))
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, TEXT("퍽퍽!!"));
+
 }
 void ALOTPlayer::Two()
 {
@@ -174,7 +191,6 @@ void ALOTPlayer::FireMode()
 		//1번째 인자false->hide,2번째 인자 false->자식 컴포넌트도 영향을 미친다.
 		TurretMesh->SetVisibility(false, false);
 		GetMesh()->SetVisibility(false, false);
-		
 	}
 	else
 	{
@@ -186,10 +202,6 @@ void ALOTPlayer::FireMode()
 		TurretMesh->SetVisibility(true, false);
 		GetMesh()->SetVisibility(true, false);
 	}
-
-		
-	
-
 }
 
 
@@ -207,7 +219,10 @@ void ALOTPlayer::Fire()
 		UWorld* const World = GetWorld();
 		if (World != NULL)
 		{
-			World->SpawnActor<AActor>(CurrentProjectile, SpawnLocation, SpawnRotation);
+			World->SpawnActor<AProjectile>(CurrentProjectile, SpawnLocation, SpawnRotation);
+			//// spawn the pickup
+			//APickup* const SpawnedPickup = World->SpawnActor<APickup>(WhatToSpawn, SpawnLocation, SpawnRotation, SpawnParams);
+			//World->SpawnActor<ALOTDrone>(ALOTDrone::StaticClass(), SpawnLocation+FVector(0.0f,0.0f,1000.f), SpawnRotation);
 			
 			UGameplayStatics::PlayWorldCameraShake(GetWorld(), UTankCameraShake::StaticClass(), GetActorLocation(), 0.f, 500.f, false);
 
@@ -221,6 +236,8 @@ void ALOTPlayer::Turn(float Val)
 {
 	
 }
+
+
 
 void ALOTPlayer::OnResetVR()
 {
@@ -252,6 +269,11 @@ void ALOTPlayer::SetDefaultInvetory()
 		CurrentProjectile = ProjectileInventory[0];
 
 	}
+}
+
+void ALOTPlayer::SpawnDrone()
+{
+	
 }
 
 //void ALOTPlayer::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
