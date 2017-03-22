@@ -121,6 +121,7 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = Inventory)
 		TArray<TSubclassOf<class AActor>> ProjectileInventory;
 
+	class AActor* HomingTarget;
 
 	/** is weapon currently equipped? */
 	uint32 bIsFireMode : 1;

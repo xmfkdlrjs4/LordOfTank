@@ -38,11 +38,11 @@ AHomingProjectile::AHomingProjectile()
 
 
 	ProjectileMovement->UpdatedComponent = CollisionComp;
-	ProjectileMovement->InitialSpeed = 8000.f;
-	ProjectileMovement->MaxSpeed = 8000.f;
+	ProjectileMovement->InitialSpeed = 4000.f;
+	ProjectileMovement->MaxSpeed = 800000.f;
 	ProjectileMovement->bRotationFollowsVelocity = true;	//속도에 따라서 탄환을 회전시키고 싶을 때 사용한다.
 	ProjectileMovement->bShouldBounce = true;
-	ProjectileMovement->ProjectileGravityScale = 1.f;
+	ProjectileMovement->ProjectileGravityScale = 0.f;
 	ProjectileMovement->bIsHomingProjectile = true;
 	ProjectileMovement->HomingAccelerationMagnitude = 25000.f;
 	
@@ -66,9 +66,15 @@ void AHomingProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, 
 
 void AHomingProjectile::SetHomingTarget(AActor* HomingTarget)
 {
-	
-	USceneComponent* const CastTarget = Cast<USceneComponent>(HomingTarget);
-	if(CastTarget)
-		ProjectileMovement->HomingTargetComponent = CastTarget;
-
+	GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Black, "SetHomingTarget Call!!");
+	USceneComponent* CastTarget = Cast<USceneComponent>(HomingTarget);
+	if (HomingTarget) {
+		ProjectileMovement->HomingTargetComponent = HomingTarget->GetRootComponent();
+		//ProjectileMovement->HomingTargetComponent = Cast<USceneComponent>(HomingTarget);
+		//CastTarget->GetName();
+		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Black, HomingTarget->GetName() +"SetHomingTarget Success!!");
+		
+	}
+	else
+		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Black, "SetHomingTarget Fail!!");
 }

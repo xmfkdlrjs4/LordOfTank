@@ -6,6 +6,7 @@
 #include "Weapon/Projectile.h"
 #include "Weapon/CommonProjectile.h"
 #include "Weapon/ArmorPiercingProjectile.h"
+#include "Weapon/HomingProjectile.h"
 #include "Effects/TankCameraShake.h"
 #include "WheeledVehicleMovementComponent4W.h"
 #include "LOTDrone.h"
@@ -164,8 +165,11 @@ void ALOTPlayer::One()
 	//FVector EndTrace = FireModeCamera->K2_GetComponentLocation() + FireModeCamera->GetForwardVector() * 5000; 
 	FHitResult OutHit;
 	//if(UKismetSystemLibrary::LineTraceSingleForObjects(GetWorld(), StartTrace, EndTrace,TraceObjects, false, TArray<AActor*>(), EDrawDebugTrace::ForDuration, OutHit, true))
-	if(UKismetSystemLibrary::LineTraceSingleForObjects(GetWorld(), StartTrace, EndTrace,TraceObjects, false, TArray<AActor*>(), EDrawDebugTrace::ForDuration, OutHit, true))
+	if (UKismetSystemLibrary::LineTraceSingleForObjects(GetWorld(), StartTrace, EndTrace, TraceObjects, false, TArray<AActor*>(), EDrawDebugTrace::ForDuration, OutHit, true)) {
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, TEXT("ÆÜÆÜ!!"));
+		HomingTarget = OutHit.GetActor();
+		GEngine->AddOnScreenDebugMessage(1, 2.0f, FColor::Blue, HomingTarget->GetName());
+	}
 
 }
 void ALOTPlayer::Two()
@@ -227,7 +231,7 @@ void ALOTPlayer::Fire()
 		UWorld* const World = GetWorld();
 		if (World != NULL)
 		{
-			World->SpawnActor<AProjectile>(CurrentProjectile, SpawnLocation, SpawnRotation);
+			World->SpawnActor<AProjectile>(CurrentProjectile, SpawnLocation, SpawnRotation)->SetHomingTarget(HomingTarget);
 			//// spawn the pickup
 			//APickup* const SpawnedPickup = World->SpawnActor<APickup>(WhatToSpawn, SpawnLocation, SpawnRotation, SpawnParams);
 			//World->SpawnActor<ALOTDrone>(ALOTDrone::StaticClass(), SpawnLocation+FVector(0.0f,0.0f,1000.f), SpawnRotation);
@@ -274,7 +278,8 @@ void ALOTPlayer::SetDefaultInvetory()
 	{
 		ProjectileInventory.AddUnique(ACommonProjectile::StaticClass());
 		ProjectileInventory.AddUnique(AArmorPiercingProjectile::StaticClass());
-		CurrentProjectile = ProjectileInventory[0];
+		ProjectileInventory.AddUnique(AHomingProjectile::StaticClass());
+		CurrentProjectile = ProjectileInventory[2];
 
 	}
 }
