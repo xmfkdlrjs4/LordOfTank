@@ -12,10 +12,16 @@ UCLASS()
 class LORDOFTANK_API ACommonProjectile : public AProjectile
 {
 	GENERATED_BODY()
+
+		UPROPERTY(VisibleDefaultsOnly, Category = Projectile)
+		class URadialForceComponent* RadialForce;
+
 	
+
 public:
 	ACommonProjectile();
 
+	
 	/** called when projectile hits something */
 	UFUNCTION()
 		virtual void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit) override;

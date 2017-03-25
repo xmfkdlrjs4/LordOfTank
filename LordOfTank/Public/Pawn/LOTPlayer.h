@@ -28,27 +28,27 @@ class LORDOFTANK_API ALOTPlayer : public AWheeledVehicle
 {
 	GENERATED_BODY()
 
-	/** Turret mesh */
+
 	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
 		class UStaticMeshComponent* TurretMesh;
 
-	/** Gun mesh */
+
 	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
 		class UStaticMeshComponent* BarrelMesh;
 
-	/** Location on BarrelMesh where projectiles should spawn. */
+
 	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
 		class USceneComponent* MuzzleLocation;
 
-	/** Spring arm that will offset the camera */
+
 	UPROPERTY(Category = Camera, VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 		USpringArmComponent* SpringArm;
 
-	/** Camera component that will be our viewpoint */
+
 	UPROPERTY(Category = Camera, VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 		UCameraComponent* MoveModeCamera;
 
-	/** Camera component that will be our viewpoint */
+
 	UPROPERTY(Category = Camera, VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 		UCameraComponent* FireModeCamera;
 
@@ -58,11 +58,10 @@ public:
 
 	
 
-	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
 		float BaseTurnRate;
 
-	/** Base look up/down rate, in deg/sec. Other scaling may affect final rate. */
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
 		float BaseLookUpRate;
 
@@ -75,26 +74,21 @@ public:
 
 	virtual void Tick(float DeltaTime) override;
 
-	// Begin Pawn interface
-	virtual void SetupPlayerInputComponent(UInputComponent* InputComponent) override;
-	// End Pawn interface
 
-	/** Handle pressing forwards */
+	virtual void SetupPlayerInputComponent(UInputComponent* InputComponent) override;
+
+	
 	void MoveForward(float Val);
 
-	/** Handle pressing right */
+	
 	void MoveRight(float Val);
 
 
-	/** Resets HMD orientation and position in VR. */
 	void OnResetVR();
 
-	//UFUNCTION()
-		//virtual void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
-
-	/** called when projectile hits something */
 
 	void SpawnDrone();
+
 	UFUNCTION()
 		virtual void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 
@@ -107,13 +101,13 @@ public:
 	void SetDefaultInvetory();
 
 	void One();
+
 	void Two();
 
 	
 
 private:
 
-	/** Projectile class to spawn */
 	UPROPERTY(EditDefaultsOnly, Category = Projectile)
 		TSubclassOf<class AActor> CurrentProjectile;
 
@@ -123,7 +117,6 @@ private:
 
 	class AActor* HomingTarget;
 
-	/** is weapon currently equipped? */
 	uint32 bIsFireMode : 1;
 
 	float MaxHealth;

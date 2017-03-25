@@ -30,7 +30,7 @@ AArmorPiercingProjectile::AArmorPiercingProjectile()
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> AmmoStaticMesh(TEXT("StaticMesh'/Game/LOTAssets/TankAssets/Meshes/ArmorPiercingAmmo.ArmorPiercingAmmo'"));
 	AmmoMesh->SetStaticMesh(AmmoStaticMesh.Object);
 	AmmoMesh->SetupAttachment(RootComponent);
-	AmmoMesh->SetRelativeRotation(FRotator(90.f, 0.0f, 0.0f));
+	AmmoMesh->SetRelativeRotation(FRotator(-90.f, 0.0f, 0.0f));
 	AmmoMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 
@@ -41,7 +41,7 @@ AArmorPiercingProjectile::AArmorPiercingProjectile()
 	//프로젝트타일무브먼트컴포넌트는 물리적인 오브젝트 위치를 나타내는 씬 컴포넌트가 아니기 때문에 붙이거나 하지 않는다.
 	// Use a ProjectileMovementComponent to govern this projectile's movement
 	ProjectileMovement->UpdatedComponent = CollisionComp;
-	ProjectileMovement->InitialSpeed = 8000.f;
+	ProjectileMovement->InitialSpeed = 4000.f;
 	ProjectileMovement->MaxSpeed = 8000.f;
 	ProjectileMovement->bRotationFollowsVelocity = true;	//속도에 따라서 탄환을 회전시키고 싶을 때 사용한다.
 	ProjectileMovement->bShouldBounce = true;

@@ -126,7 +126,7 @@ ALOTPlayer::ALOTPlayer()
 void ALOTPlayer::BeginPlay()
 {
 	Super::BeginPlay();
-	SetDefaultInvetory();
+	//SetDefaultInvetory();
 	OnResetVR();
 
 
@@ -149,26 +149,18 @@ void ALOTPlayer::SetupPlayerInputComponent(UInputComponent* InputComponent)
 }
 void ALOTPlayer::One()
 {
-	//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, TEXT("One!!!"));
-	//CurrentProjectile = ProjectileInventory[0];
 	
-	//UGameplayStatics::GetPlayerController(GetWorld(), 0)->Possess();
 	TArray<TEnumAsByte<EObjectTypeQuery>> TraceObjects;
 	TraceObjects.Add(UEngineTypes::ConvertToObjectType(ECC_Vehicle));
-
-
 
 	UWorld* const World = GetWorld();
 	FVector StartTrace = MuzzleLocation->K2_GetComponentLocation();
 	FVector EndTrace = MuzzleLocation->K2_GetComponentLocation() + MuzzleLocation->GetForwardVector() * 5000;
-	//FVector StartTrace = FireModeCamera->K2_GetComponentLocation();
-	//FVector EndTrace = FireModeCamera->K2_GetComponentLocation() + FireModeCamera->GetForwardVector() * 5000; 
+
 	FHitResult OutHit;
-	//if(UKismetSystemLibrary::LineTraceSingleForObjects(GetWorld(), StartTrace, EndTrace,TraceObjects, false, TArray<AActor*>(), EDrawDebugTrace::ForDuration, OutHit, true))
 	if (UKismetSystemLibrary::LineTraceSingleForObjects(GetWorld(), StartTrace, EndTrace, TraceObjects, false, TArray<AActor*>(), EDrawDebugTrace::ForDuration, OutHit, true)) {
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, TEXT("퍽퍽!!"));
 		HomingTarget = OutHit.GetActor();
-		GEngine->AddOnScreenDebugMessage(1, 2.0f, FColor::Blue, HomingTarget->GetName());
+		GEngine->AddOnScreenDebugMessage(1, 2.0f, FColor::Blue, "Target Name = " + HomingTarget->GetName());
 	}
 
 }
@@ -208,6 +200,7 @@ void ALOTPlayer::FireMode()
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, TEXT("노포격모드!!!"));
 		MoveModeCamera->Activate();
 		FireModeCamera->Deactivate();
+
 		//1번째 인자false->hide,2번째 인자 false->자식 컴포넌트도 영향을 미친다.
 		TurretMesh->SetVisibility(true, false);
 		GetMesh()->SetVisibility(true, false);
@@ -222,16 +215,17 @@ void ALOTPlayer::FireMode()
 void ALOTPlayer::Fire()
 {
 	
-	if (CurrentProjectile != NULL)
+	if (CurrentProjectile != NULL && bIsFireMode)
 	{
 		const FRotator SpawnRotation = GetActorRotation()+ FireModeCamera->RelativeRotation;//
-		// MuzzleOffset is in camera space, so transform it to world space before offsetting from the character location to find the final muzzle position
+		
 		const FVector SpawnLocation = ((MuzzleLocation != nullptr) ? MuzzleLocation->GetComponentLocation() : GetActorLocation()) ;
 
 		UWorld* const World = GetWorld();
 		if (World != NULL)
 		{
-			World->SpawnActor<AProjectile>(CurrentProjectile, SpawnLocation, SpawnRotation)->SetHomingTarget(HomingTarget);
+			World->SpawnActor<AActor>(CurrentProjectile, SpawnLocation, SpawnRotation);
+			//World->SpawnActor<AProjectile>(CurrentProjectile, SpawnLocation, SpawnRotation)->SetHomingTarget(HomingTarget);
 			//// spawn the pickup
 			//APickup* const SpawnedPickup = World->SpawnActor<APickup>(WhatToSpawn, SpawnLocation, SpawnRotation, SpawnParams);
 			//World->SpawnActor<ALOTDrone>(ALOTDrone::StaticClass(), SpawnLocation+FVector(0.0f,0.0f,1000.f), SpawnRotation);
@@ -279,7 +273,7 @@ void ALOTPlayer::SetDefaultInvetory()
 		ProjectileInventory.AddUnique(ACommonProjectile::StaticClass());
 		ProjectileInventory.AddUnique(AArmorPiercingProjectile::StaticClass());
 		ProjectileInventory.AddUnique(AHomingProjectile::StaticClass());
-		CurrentProjectile = ProjectileInventory[2];
+		CurrentProjectile = ProjectileInventory[0];
 
 	}
 }

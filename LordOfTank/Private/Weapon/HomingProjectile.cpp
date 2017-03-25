@@ -29,22 +29,18 @@ AHomingProjectile::AHomingProjectile()
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> AmmoStaticMesh(TEXT("StaticMesh'/Game/LOTAssets/TankAssets/Meshes/ArmorPiercingAmmo.ArmorPiercingAmmo'"));
 	AmmoMesh->SetStaticMesh(AmmoStaticMesh.Object);
 	AmmoMesh->SetupAttachment(RootComponent);
-	AmmoMesh->SetRelativeRotation(FRotator(90.f, 0.0f, 0.0f));
+	AmmoMesh->SetRelativeRotation(FRotator(-90.f, 0.0f, 0.0f));
 	AmmoMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-
-
-
-
 
 
 	ProjectileMovement->UpdatedComponent = CollisionComp;
 	ProjectileMovement->InitialSpeed = 4000.f;
 	ProjectileMovement->MaxSpeed = 800000.f;
-	ProjectileMovement->bRotationFollowsVelocity = true;	//속도에 따라서 탄환을 회전시키고 싶을 때 사용한다.
+	ProjectileMovement->bRotationFollowsVelocity = true;	
 	ProjectileMovement->bShouldBounce = true;
 	ProjectileMovement->ProjectileGravityScale = 0.f;
 	ProjectileMovement->bIsHomingProjectile = true;
-	ProjectileMovement->HomingAccelerationMagnitude = 25000.f;
+	ProjectileMovement->HomingAccelerationMagnitude = 11000.f;
 	
 
 }
@@ -67,11 +63,8 @@ void AHomingProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, 
 void AHomingProjectile::SetHomingTarget(AActor* HomingTarget)
 {
 	GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Black, "SetHomingTarget Call!!");
-	USceneComponent* CastTarget = Cast<USceneComponent>(HomingTarget);
 	if (HomingTarget) {
 		ProjectileMovement->HomingTargetComponent = HomingTarget->GetRootComponent();
-		//ProjectileMovement->HomingTargetComponent = Cast<USceneComponent>(HomingTarget);
-		//CastTarget->GetName();
 		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Black, HomingTarget->GetName() +"SetHomingTarget Success!!");
 		
 	}

@@ -29,9 +29,17 @@ ACommonProjectile::ACommonProjectile()
 
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> AmmoStaticMesh(TEXT("StaticMesh'/Game/LOTAssets/TankAssets/Meshes/CommonAmmo.CommonAmmo'"));
 	AmmoMesh->SetStaticMesh(AmmoStaticMesh.Object);
-	AmmoMesh->SetRelativeRotation(FRotator(90.f, 0.0f, 0.0f));
+	AmmoMesh->SetRelativeRotation(FRotator(-90.f, 0.0f, 0.0f));
 	AmmoMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	AmmoMesh->SetupAttachment(RootComponent);
+
+	RadialForce = CreateDefaultSubobject<URadialForceComponent>(TEXT("RadialForce"));
+	RadialForce->Radius = 900.f;
+	RadialForce->ImpulseStrength = 500000.f;
+	RadialForce->SetupAttachment(RootComponent);
+
+
+
 
 
 
@@ -41,7 +49,7 @@ ACommonProjectile::ACommonProjectile()
 	//프로젝트타일무브먼트컴포넌트는 물리적인 오브젝트 위치를 나타내는 씬 컴포넌트가 아니기 때문에 붙이거나 하지 않는다.
 	// Use a ProjectileMovementComponent to govern this projectile's movement
 	ProjectileMovement->UpdatedComponent = CollisionComp;
-	ProjectileMovement->InitialSpeed = 8000.f;
+	ProjectileMovement->InitialSpeed = 4000.f;
 	ProjectileMovement->MaxSpeed = 8000.f;
 	ProjectileMovement->bRotationFollowsVelocity = true;	//속도에 따라서 탄환을 회전시키고 싶을 때 사용한다.
 	ProjectileMovement->bShouldBounce = true;
@@ -59,11 +67,16 @@ void ACommonProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, 
 	// Only add impulse and destroy projectile if we hit a physics
 	if ((OtherActor != NULL) && (OtherActor != this) && (OtherComp != NULL) )
 	{
-		
+		RadialForce->FireImpulse();
+		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Black, "Damage Player!");
+		RadialForce->FireImpulse();
 		if (OtherActor->IsA(ALOTPlayer::StaticClass())) {
-			GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Black, "Damage Player!");
-			OtherComp->AddImpulseAtLocation(GetVelocity() * 100.0f, GetActorLocation());
+			//GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Black, "Damage Player!");
+			//RadialForce->FireImpulse();
+			//GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Black, "Damage Player!");
+			//OtherComp->AddImpulseAtLocation(GetVelocity() * 100.0f, GetActorLocation());
 		}
+
 		Destroy();
 	}
 }

@@ -23,6 +23,8 @@ class LORDOFTANK_API ALordOfTankGameModeBase : public AGameModeBase
 	
 public:
 	ALordOfTankGameModeBase();
-	
+
+	class ALOTPlayer* MyPlayer;
+
 	virtual void StartPlay() override;
 };

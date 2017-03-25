@@ -16,6 +16,7 @@ ALordOfTankGameModeBase::ALordOfTankGameModeBase()
 	//{
 	DefaultPawnClass = ALOTPlayer::StaticClass();
 	//}
+	
 }
 
 void ALordOfTankGameModeBase::StartPlay()
