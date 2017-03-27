@@ -42,7 +42,7 @@ protected:
 	//탄알 수
 	float AmmoCount;
 	//탄알 데미지
-	float Damage;
+	float ProjectileDamage;
 
 
 

@@ -103,6 +103,8 @@ public:
 	void One();
 
 	void Two();
+	UFUNCTION()
+	void TakeDamage(float damage);
 
 	
 
@@ -120,6 +122,9 @@ private:
 	uint32 bIsFireMode : 1;
 
 	float MaxHealth;
+
+	float MaxShield;
+
 
 	float CurrentHealth;
 

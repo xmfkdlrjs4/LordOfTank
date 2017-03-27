@@ -53,12 +53,6 @@ ALOTPlayer::ALOTPlayer()
 	//ÃÑ±¸¿¡ ¾ÀÄÄÆ÷³ÍÆ® ºÎÂø.
 	MuzzleLocation = CreateDefaultSubobject<USceneComponent>(TEXT("MuzzleLocation"));
 	MuzzleLocation->AttachToComponent(BarrelMesh, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("Muzzle"));
-	//MuzzleLocation->SetRelativeLocation(FVector(0.2f, 48.4f, -10.6f));
-
-	//ÃÑ¾Ë ¼³Á¤.
-	//static ConstructorHelpers::FClassFinder<AProjectile> ProjectileClass(TEXT("/Game/BP/MyServer.MyServer_C"));
-	
-
 
 	
 	// ¹ÙÄû¿¡ ÈÙ Å¬·¡½º Àû¿ë
@@ -112,12 +106,8 @@ ALOTPlayer::ALOTPlayer()
 
 	bIsFireMode = false;
 
-	MaxHealth = 500;
+	MaxHealth = 100.f;
 	CurrentHealth = MaxHealth;
-
-	//MyDrone = CreateDefaultSubobject<ALOTDrone>(TEXT("MyWebConnection"));
-	
-
 
 
 	
@@ -288,11 +278,24 @@ void ALOTPlayer::SpawnDrone()
 //	// Other Actor is the actor that triggered the event. Check that is not ourself.  
 //	if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr))
 //	{
-//		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Black, "½´¹æ!");
 //		// Turn off the light  
 //		//PointLight->SetVisibility(false);
 //	}
 //}
+
+void ALOTPlayer::TakeDamage(float damage)
+{
+	CurrentHealth -= damage;
+	if (CurrentHealth <= 0.f) {
+
+		TurretMesh->SetSimulatePhysics(true);
+		BarrelMesh->SetSimulatePhysics(true);
+		TurretMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+		BarrelMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+
+	}
+	GEngine->AddOnScreenDebugMessage(1, 2.0f, FColor::Blue, FString::Printf(TEXT("%f"), CurrentHealth));
+}
 
 
 
@@ -302,8 +305,7 @@ void ALOTPlayer::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimit
 	// Only add impulse and destroy projectile if we hit a physics
 	if ((OtherActor != NULL) && (OtherActor != this) && (OtherComp != NULL))
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Black, "FUCK!");
-		//OtherComp->AddImpulseAtLocation(GetVelocity() * 100.0f, GetActorLocation());
-		//Destroy();
+		;
 	}
 }
+
